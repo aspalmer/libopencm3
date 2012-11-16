@@ -150,6 +150,90 @@ int spi_init_master(u32 spi, u32 br, u32 cpol, u32 cpha, u32 dff, u32 lsbfirst)
 
 	return 0; /* TODO */
 }
+/*-----------------------------------------------------------------------------*/
+/** @brief Set baud rate for I2S module.
+ *
+ e
+ *
+ * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
+ * @param[in] mck_enable Unsigned int32. Is 0 or 1 .
+ * @param[in] odd Unsigned int32. real divider is 2*div+odd (0 or 1).
+ * @param[in] div Unsigned int32. divider for i2s. 0 and 1 are forbidden
+ * */
+
+void i2s_set_baud(u32 spi, u32 mck_enable, u32 odd, u32 div)
+{
+	u32 reg = 0;
+	reg |= mck_enable;
+	reg |= odd;
+	reg |= div;
+	SPI_I2SPR(spi) = reg;
+}
+
+/*-----------------------------------------------------------------------------*/
+/** @brief Configure the I2S module.
+ *
+ * The SPI peripheral is configured as a master with communication parameters
+ * baudrate, data format 8/16 bits, frame format lsb/msb first, clock polarity
+ * and phase. The SPI enable, CRC enable and CRC next controls are not affected.
+ * These must be controlled separately.
+ *
+ * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
+ * @param[in] . Baudrate @ref spi_baudrate.
+ * @param[in] cpol Unsigned int32. Clock polarity @ref spi_cpol.
+ * @param[in] cpha Unsigned int32. Clock Phase @ref spi_cpha.
+ * @param[in] dff Unsigned int32. Data frame format 8/16 bits @ref spi_dff.
+ * @param[in] lsbfirst Unsigned int32. Frame format lsb/msb first @ref spi_lsbfirst.
+ * @returns int. Error code.
+ * */
+
+void i2s_init(u32 spi, u32 standard, u32 pcmsync, u32 data_length,
+		u32 ck_polarity, u32 channel_length, u32 mode)
+{
+	u32 reg = 0;
+	reg |= channel_length;
+	reg |= data_length << SPI_I2SCFGR_DATLEN_LSB;
+	reg |= ck_polarity;
+	reg |= standard << SPI_I2SCFGR_I2SSTD_LSB;
+	reg |= pcmsync;
+	reg |= mode << SPI_I2SCFGR_I2SCFG_LSB;
+	reg |= SPI_I2SCFGR_I2SMOD; /*select i2s, not spi*/
+	SPI_I2SCFGR(spi) = reg;
+}
+
+/*-----------------------------------------------------------------------------*/
+/** @brief SPI Enable.
+ *
+ * The I2S peripheral is enabled.
+ *
+ * @todo Error handling?
+ *
+ * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
+ * */
+
+void i2s_enable(u32 spi)
+{
+	u32 reg = SPI_I2SCFGR(spi);
+	reg |= SPI_I2SCFGR_I2SE;
+	SPI_I2SCFGR(spi) = reg;
+}
+
+/*-----------------------------------------------------------------------------*/
+/** @brief SPI Enable.
+ *
+ * The I2S peripheral is disabled.
+ *
+ * @todo Error handling?
+ *
+ * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
+ * */
+/*it is mandatory to wait for TXE = 1 and BSY = 0.*/
+void i2s_disable(u32 spi)
+{
+	u32 reg = SPI_I2SCFGR(spi);
+	reg &= 0b011111111111;
+	SPI_I2SCFGR(spi) = reg;
+}
 
 /* TODO: Error handling? */
 /*-----------------------------------------------------------------------------*/
@@ -173,7 +257,7 @@ void spi_enable(u32 spi)
 
 The SPI peripheral is disabled.
 
-@todo  Follow procedure from section 23.3.8 in the TRM. 
+@todo  Follow procedure from section 23.3.8 in the TRM.
 (possibly create a "clean disable" function separately)
 
 @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
