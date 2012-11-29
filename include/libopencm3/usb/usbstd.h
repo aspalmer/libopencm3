@@ -139,8 +139,9 @@ struct usb_config_descriptor {
 	u8 bMaxPower;
 
 	/* Descriptor ends here.  The following are used internally: */
-	const struct usb_interface {
-		int num_altsetting;
+	struct usb_interface {
+		u8 cur_altsetting;
+		const u8 num_altsetting;
 		const struct usb_iface_assoc_descriptor *iface_assoc;
 		const struct usb_interface_descriptor *altsetting;
 	} *interface;
