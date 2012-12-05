@@ -244,8 +244,6 @@ static int usb_standard_get_configuration(usbd_device *usbd_dev,
 	return 1;
 }
 
-
-usbd_device debug;
 static int usb_standard_set_interface(usbd_device *usbd_dev,
 				      struct usb_setup_data *req,
 				      u8 **buf, u16 *len)
@@ -269,8 +267,7 @@ static int usb_standard_set_interface(usbd_device *usbd_dev,
 		usbd_dev->config->interface[req->wIndex].cur_altsetting = req->wValue;
 		if(usbd_dev->user_callback_set_altsetting)
 			usbd_dev->user_callback_set_altsetting(usbd_dev,
-							       req->wIndex,
-							       req->wValue);
+		      		req->wIndex, req->wValue);
 	}
 	*len = 0;
 

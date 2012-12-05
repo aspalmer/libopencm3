@@ -199,10 +199,9 @@ struct usb_isoc_endpoint_descriptor {
 	u8 bInterval;
 	u8 bRefresh;
 	u8 bSynchAddress;
-        const void *extra;
+	const void *extra;
 	int extralen;
 } __attribute__((packed));
-
 
 /* USB Endpoint Descriptor bmAttributes bit definitions */
 #define USB_ENDPOINT_ATTR_CONTROL		0x00
@@ -239,6 +238,7 @@ struct usb_iface_assoc_descriptor {
 	u8 bFunctionProtocol;
 	u8 iFunction;
 } __attribute__((packed));
+
 #define USB_DT_INTERFACE_ASSOCIATION_SIZE \
 				sizeof(struct usb_iface_assoc_descriptor)
 
@@ -257,6 +257,7 @@ struct usb_audio_class_header_descriptor {
 	u8 bInCollection;
 	u8 baInterfaceNr;
 } __attribute__((packed));
+
 #define USB_AUDIO_HEADER_SIZE \
 	sizeof(struct usb_audio_class_header_descriptor)
 
@@ -273,6 +274,7 @@ struct usb_audio_class_input_terminal_descriptor {
 	u8 iChannelNames;
 	u8 iTerminal;
 } __attribute__((packed));
+
 #define USB_INPUT_TERMINAL_SIZE \
 	sizeof(struct usb_audio_class_input_terminal_descriptor)
 

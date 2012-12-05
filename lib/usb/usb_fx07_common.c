@@ -89,8 +89,7 @@ void stm32fx07_ep_setup(usbd_device *usbd_dev, u8 addr, u8 type, u16 max_size,
 		    (max_size & OTG_FS_DIEPSIZ0_XFRSIZ_MASK);
 		REBASE(OTG_DIEPCTL(addr)) |=
 		    OTG_FS_DIEPCTL0_EPENA | OTG_FS_DIEPCTL0_SNAK | (type << 18)
-		    | OTG_FS_DIEPCTL0_USBAEP
-		    | (addr << 22) | max_size;
+		    | OTG_FS_DIEPCTL0_USBAEP | (addr << 22) | max_size;
 
 		if (callback) {
 			usbd_dev->user_callback_ctr[addr][USB_TRANSACTION_IN] =

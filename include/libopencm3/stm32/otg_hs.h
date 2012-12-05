@@ -367,7 +367,6 @@
 #define OTG_HS_DOEPCTL0_RM_FRM_MSK 	0xCFFFFFFF
 #define FNSOF_MASK 			(0x1 << 8)
 
-
 /* OTG_FS Device IN Endpoint Interrupt Register (OTG_HS_DIEPINTx) */
 /* Bits 31:8 - Reserved */
 #define OTG_HS_DIEPINTX_TXFE		(1 << 7)
