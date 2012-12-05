@@ -141,7 +141,7 @@ struct usb_config_descriptor {
 	/* Descriptor ends here.  The following are used internally: */
 	struct usb_interface {
 		u8 cur_altsetting;
-		const u8 num_altsetting;
+		u8 num_altsetting;
 		const struct usb_iface_assoc_descriptor *iface_assoc;
 		const struct usb_interface_descriptor *altsetting;
 	} *interface;
@@ -183,8 +183,26 @@ struct usb_endpoint_descriptor {
 	u8 bmAttributes;
 	u16 wMaxPacketSize;
 	u8 bInterval;
+	const void *append;
+	const void *extra;
+	int extralen;
 } __attribute__((packed));
 #define USB_DT_ENDPOINT_SIZE		sizeof(struct usb_endpoint_descriptor)
+
+/* USB ISOC Endpoint Descriptor - Table 9-13 */
+struct usb_isoc_endpoint_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bEndpointAddress;
+	u8 bmAttributes;
+	u16 wMaxPacketSize;
+	u8 bInterval;
+	u8 bRefresh;
+	u8 bSynchAddress;
+        const void *extra;
+	int extralen;
+} __attribute__((packed));
+
 
 /* USB Endpoint Descriptor bmAttributes bit definitions */
 #define USB_ENDPOINT_ATTR_CONTROL		0x00
@@ -227,4 +245,89 @@ struct usb_iface_assoc_descriptor {
 enum usb_language_id {
 	USB_LANGID_ENGLISH_US = 0x409,
 };
+
+/* Interface Header Audio Class descriptor */
+
+struct usb_audio_class_header_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bDescriptorSubType;
+	u16 bcdADC;
+	u16 wTotalLength;
+	u8 bInCollection;
+	u8 baInterfaceNr;
+} __attribute__((packed));
+#define USB_AUDIO_HEADER_SIZE \
+	sizeof(struct usb_audio_class_header_descriptor)
+
+/* Input Terminal Audio Class descriptor */
+struct usb_audio_class_input_terminal_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bDescriptorSubType;
+	u8 bTerminalID;
+	u16 wTerminalType;
+	u8 bAssocTerminal;
+	u8 bNrChannels;
+	u16 wChannelConfig;
+	u8 iChannelNames;
+	u8 iTerminal;
+} __attribute__((packed));
+#define USB_INPUT_TERMINAL_SIZE \
+	sizeof(struct usb_audio_class_input_terminal_descriptor)
+
+/* Output Terminal Audio Class descriptor */
+struct usb_audio_class_output_terminal_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bDescriptorSubtype;
+	u8 bTerminalID;
+	u16 wTerminalType;
+	u8 bAssocTerminal;
+	u8 bSourceID;
+	u8 iTerminal;
+} __attribute__((packed));
+
+#define USB_OUTPUT_TERMINAL_SIZE \
+	        sizeof(struct usb_audio_class_output_terminal_descriptor)
+
+/*  USB Format Type Descriptor */
+struct usb_format_type_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bDescriptorSubtype;
+	u8 bFormatType;
+	u8 bNrChannels;
+	u8 bSubframeSize;
+	u8 bBitResolution;
+	u8 bSamFreqType;
+	u8 tSamFreq[3];
+} __attribute__((packed));
+
+#define USB_AUDIO_FORMAT_SIZE \
+	sizeof(struct usb_microphone_type_1_format_type_descriptor)
+
+/*Class-specific Isoc. Audio Data Endpoint Descriptor*/
+struct usb_audio_isoc_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bDescriptorSubtype;
+	u8 bmAttributes;
+	u8 bLockDelayUnits;
+	u16 wLockDelay;
+} __attribute__((packed));
+
+#define USB_AUDIO_ISOC_SIZE \
+	sizeof(struct usb_audio_isoc_descriptor)
+
+/*Class-specific AS General Interface Descriptor */
+struct usb_class_as_general_interface_descriptor {
+	u8 bLength;
+	u8 bDescriptorType;
+	u8 bDescriptorSubtype;
+	u8 bTerminalLink;
+	u8 bDelay;
+	u16 wFormatTag;
+} __attribute__((packed));
+
 #endif

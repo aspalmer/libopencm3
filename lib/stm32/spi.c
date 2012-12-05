@@ -153,7 +153,8 @@ int spi_init_master(u32 spi, u32 br, u32 cpol, u32 cpha, u32 dff, u32 lsbfirst)
 /*-----------------------------------------------------------------------------*/
 /** @brief Set baud rate for I2S module.
  *
- e
+ * This function sets the baud rate for the I2S module and controls the presence
+ * of MCLK.
  *
  * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
  * @param[in] mck_enable Unsigned int32. Is 0 or 1 .
@@ -179,7 +180,8 @@ void i2s_set_baud(u32 spi, u32 mck_enable, u32 odd, u32 div)
  * These must be controlled separately.
  *
  * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
- * @param[in] . Baudrate @ref spi_baudrate.
+ * @param[in] pcmsync short or long synchonization frames (only matters for PCM
+ * mode)  @ref PCMSYNC
  * @param[in] cpol Unsigned int32. Clock polarity @ref spi_cpol.
  * @param[in] cpha Unsigned int32. Clock Phase @ref spi_cpha.
  * @param[in] dff Unsigned int32. Data frame format 8/16 bits @ref spi_dff.
