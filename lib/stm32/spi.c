@@ -157,9 +157,9 @@ int spi_init_master(u32 spi, u32 br, u32 cpol, u32 cpha, u32 dff, u32 lsbfirst)
  * of MCLK.
  *
  * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
- * @param[in] mck_enable Unsigned int32. Is 0 or 1 .
- * @param[in] odd Unsigned int32. real divider is 2*div+odd (0 or 1).
- * @param[in] div Unsigned int32. divider for i2s. 0 and 1 are forbidden
+ * @param[in] mck_enable Unsigned int32. Is 0 or 1 @ref mckoe
+ * @param[in] odd Unsigned int32. real divider is 2*div+odd (0 or 1). @ref odd
+ * @param[in] div Unsigned int32. divider for i2s. 0 and 1 are forbidden @ref i2sdiv
  * */
 
 void i2s_set_baud(u32 spi, u32 mck_enable, u32 odd, u32 div)
@@ -181,11 +181,13 @@ void i2s_set_baud(u32 spi, u32 mck_enable, u32 odd, u32 div)
  *
  * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
  * @param[in] pcmsync short or long synchonization frames (only matters for PCM
- * mode)  @ref PCMSYNC
- * @param[in] cpol Unsigned int32. Clock polarity @ref spi_cpol.
- * @param[in] cpha Unsigned int32. Clock Phase @ref spi_cpha.
- * @param[in] dff Unsigned int32. Data frame format 8/16 bits @ref spi_dff.
- * @param[in] lsbfirst Unsigned int32. Frame format lsb/msb first @ref spi_lsbfirst.
+ * 	mode)  @ref pcmsync
+ * @param[in] data_length Unsigned int32. Data length (16,24,32bit) @ref datlen.
+ * @param[in] ck_polarity Unsigned int32. Clock polarity @ref ckpol.
+ * @param[in] channel_length Unsigned int32. bits per channel (16 or 32bit)
+ * 	@ref chlen.
+ * @param[in] mode Unsigned int32. Mode: master or slave, transmit or recieve
+ * 	@ref i2scfg.
  * @returns int. Error code.
  * */
 
@@ -229,12 +231,19 @@ void i2s_enable(u32 spi)
  *
  * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
  * */
-/*it is mandatory to wait for TXE = 1 and BSY = 0.*/
-void i2s_disable(u32 spi)
+
+uint8_t i2s_disable(u32 spi)
 {
-	u32 reg = SPI_I2SCFGR(spi);
-	reg &= 0b011111111111;
-	SPI_I2SCFGR(spi) = reg;
+	u32 reg;
+	reg = SPI_SR(spi);
+	/* it is mandatory to wait for TXE = 1 and BSY = 0 */
+	if ((reg & SPI_SR_TXE)&&((reg & SPI_SR_BSY) == 0)) {
+		reg = SPI_I2SCFGR(spi);
+		reg &= 0b011111111111;
+		SPI_I2SCFGR(spi) = reg;
+		return 1;
+	}
+	return 0;
 }
 
 /* TODO: Error handling? */
