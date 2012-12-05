@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include <libopencm3/cm3/scb.h>
 #include <libopencm3/cm3/vector.h>
 
 /* load optional platform dependent initialization routines */
@@ -82,8 +82,13 @@ void WEAK reset_handler(void)
 	main();
 }
 
+u32 mem1;
+u32 mem2;
 void blocking_handler(void)
 {
+
+	mem1 = SCB_MMFAR;
+	mem2 = SCB_SHCSR;
 	while (1) ;
 }
 
