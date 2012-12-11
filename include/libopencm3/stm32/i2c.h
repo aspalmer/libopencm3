@@ -376,7 +376,7 @@ void i2c_set_ccr(u32 i2c, u16 freq);
 void i2c_set_trise(u32 i2c, u16 trise);
 void i2c_send_7bit_address(u32 i2c, u8 slave, u8 readwrite);
 void i2c_send_data(u32 i2c, u8 data);
-uint8_t i2c_get_data(u32 i2c);
+u8 i2c_get_data(u32 i2c);
 void i2c_enable_interrupt(u32 i2c, u32 interrupt);
 void i2c_disable_interrupt(u32 i2c, u32 interrupt);
 void i2c_enable_ack(u32 i2c);
