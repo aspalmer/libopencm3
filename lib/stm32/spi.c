@@ -233,7 +233,7 @@ void i2s_enable(u32 spi)
  * */
 
 void i2s_disable(u32 spi)
-
+{
 	u32 reg = SPI_SR(spi);
 	/* it is mandatory to wait for TXE = 1 and BSY = 0 */
 	while ((reg & SPI_SR_TXE)&&((reg & SPI_SR_BSY) != 0));

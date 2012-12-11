@@ -141,6 +141,7 @@ struct usb_config_descriptor {
 	/* Descriptor ends here.  The following are used internally: */
 	struct usb_interface {
 		u8 cur_altsetting;
+		u8 num_altsetting;
 		const struct usb_iface_assoc_descriptor *iface_assoc;
 		const struct usb_interface_descriptor *altsetting;
 	} *interface;
