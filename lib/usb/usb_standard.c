@@ -87,6 +87,12 @@ static u16 build_config_descriptor(usbd_device *usbd_dev,
 				len -= count;
 				total += count;
 				totallen += ep->bLength;
+				memcpy(buf, ep->extra,
+						count = MIN(len, ep->extralen));
+				buf += count;
+				len -= count;
+				total += count;
+				totallen += ep->extralen;
 			}
 		}
 	}
@@ -261,8 +267,7 @@ static int usb_standard_set_interface(usbd_device *usbd_dev,
 		usbd_dev->config->interface[req->wIndex].cur_altsetting = req->wValue;
 		if(usbd_dev->user_callback_set_altsetting)
 			usbd_dev->user_callback_set_altsetting(usbd_dev,
-							       req->wIndex,
-							       req->wValue);
+		      		req->wIndex, req->wValue);
 	}
 	*len = 0;
 
