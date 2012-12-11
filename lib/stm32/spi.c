@@ -232,18 +232,15 @@ void i2s_enable(u32 spi)
  * @param[in] spi Unsigned int32. SPI peripheral identifier @ref spi_reg_base.
  * */
 
-uint8_t i2s_disable(u32 spi)
-{
-	u32 reg;
-	reg = SPI_SR(spi);
+void i2s_disable(u32 spi)
+
+	u32 reg = SPI_SR(spi);
 	/* it is mandatory to wait for TXE = 1 and BSY = 0 */
-	if ((reg & SPI_SR_TXE)&&((reg & SPI_SR_BSY) == 0)) {
-		reg = SPI_I2SCFGR(spi);
-		reg &= 0b011111111111;
-		SPI_I2SCFGR(spi) = reg;
-		return 1;
-	}
-	return 0;
+	while ((reg & SPI_SR_TXE)&&((reg & SPI_SR_BSY) != 0));
+
+	reg = SPI_I2SCFGR(spi);
+	reg &= 0b011111111111;
+	SPI_I2SCFGR(spi) = reg;
 }
 
 /* TODO: Error handling? */
