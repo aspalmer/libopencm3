@@ -146,6 +146,31 @@ void gpio_set_mode(u32 gpioport, u8 mode, u8 cnf, u16 gpios)
 }
 
 /*-----------------------------------------------------------------------------*/
+/** @brief Set GPIO Pin Mode from configuration table
+
+Sets the mode (input/output) and configuration (analog/digitial and
+open drain/push pull), for a set of GPIO pins for all the GPIO ports
+specified in the GPIO configuration table.
+
+@param[in] config Const struct gpio_port_config *. GPIO port
+configuration table.
+@param[in] num_config Int. Configuration table length.
+*/
+void gpio_set_port_config(const struct gpio_port_config *config, int num_config)
+{
+        int i;
+        for (i = 0; i < num_config; i++) {
+                gpio_set_mode(config[i].port, config[i].mode,
+			      config[i].cnf, config[i].pins);
+
+                if (config[i].level)
+			gpio_set(config[i].port, config[i].pins);
+                else
+			gpio_clear(config[i].port, config[i].pins);
+        }
+}
+
+/*-----------------------------------------------------------------------------*/
 /** @brief Set a Group of Pins Atomic
 
 Set one or more pins of the given GPIO port to 1 in an atomic operation.
