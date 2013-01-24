@@ -969,7 +969,7 @@ u16 gpio_port_read(u32 gpioport);
 void gpio_port_write(u32 gpioport, u16 data);
 void gpio_port_config_lock(u32 gpioport, u16 gpios);
 void gpio_set_eventout(u8 evoutport, u8 evoutpin);
-void gpio_primary_remap(u8 swjenable, u32 maps);
+void gpio_primary_remap(u32 swjenable, u32 maps);
 void gpio_secondary_remap(u32 maps);
 void gpio_set_port_config(const struct gpio_port_config *config, int num_config);
 

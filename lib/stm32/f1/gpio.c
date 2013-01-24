@@ -315,7 +315,7 @@ value cannot be ascertained from the hardware.
 		@ref afio_remap_usart3. For connectivity line devices only @ref afio_remap_cld are
         also available.
 */
-void gpio_primary_remap(u8 swjdisable, u32 maps)
+void gpio_primary_remap(u32 swjdisable, u32 maps)
 {
 	AFIO_MAPR |= swjdisable | (maps & 0x1FFFFF);
 }
