@@ -23,7 +23,7 @@ void scb_reset_core(void)
 {
 	SCB_AIRCR = SCB_AIRCR_VECTKEY | SCB_AIRCR_VECTRESET;
 }
-
+__attribute__((noreturn, naked))
 void scb_reset_system(void)
 {
 	SCB_AIRCR = SCB_AIRCR_VECTKEY | SCB_AIRCR_SYSRESETREQ;
